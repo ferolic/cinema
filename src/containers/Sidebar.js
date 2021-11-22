@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -66,18 +66,23 @@ const LinkWrap = styled(Link)`
 const Sidebar = () => {
     const config = useSelector((state) => state.config );
     const { staticCategories , genres , loading  } = config;
+    const [isOpened, setisOpened] = useState(true);
+
+    const isMenuOpen = ({isOpened}) => {
+        setisOpened(isOpened)
+    }
 
     return (
         <>
             <WrapperStickyBox>
-                <Hamburguer>
+                <Hamburguer onClick={() => setisOpened(true)}>
                     <Bar />
                     <Bar />
                     <Bar />
                 </Hamburguer>
                 <Searchbar />
             </WrapperStickyBox>  
-            <Menu isOpen={true} styles={slidestyle}>
+            <Menu isOpen={isOpened} onStateChange={isMenuOpen}  styles={slidestyle} >
                 <Heading> Discover </Heading>
                 {renderStatic(staticCategories)}
                 <Heading> Genres </Heading>
