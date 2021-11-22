@@ -25,3 +25,20 @@ export const getGenres = () => async(dispatch) => {
         payload : res.data,
     })
 }
+
+// set the current selected menu
+export const setSelectedMenu = name => (dispatch, getState) => {
+    const { staticCategoreies, genres } = getState().config;
+
+    if(!name){
+        dispatch({ type : TYPES.REMOVE_SELECTED_MENU })
+    } else if(
+        staticCategoreies.find(category => category === name) ||
+        genres.find(genre => genre.name === name)
+    ) {
+        dispatch({ 
+            type : TYPES.SET_SELECTED_MENU, 
+            payload : name 
+        })
+    }
+}

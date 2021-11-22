@@ -3,7 +3,7 @@ import * as TYPES from '../actions/types';
 const INITIAL_STATE = {
     staticCategories : ['Popular', 'Top Rated', 'Upcoming'],
     loading : true,
-    selected : 'Popular'
+    selected : 'Action'
 };
 
 const configReducer =  (state = INITIAL_STATE, action) => {

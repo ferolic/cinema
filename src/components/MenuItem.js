@@ -45,9 +45,9 @@ function renderIcon(title){
     }
 }
 
-const MenuItem = ({ title }) => {
+const MenuItem = ({ title, selected }) => {
     return (
-        <StyledItem>
+        <StyledItem selected={selected}>
             <FontAwesomeIcon 
                 size="1x" 
                 style={{ marginRight : '10px'}} 
