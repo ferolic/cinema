@@ -2,7 +2,8 @@ import * as TYPES from '../actions/types';
 
 const INITIAL_STATE = {
     staticCategories : ['Popular', 'Top Rated', 'Upcoming'],
-    loading : true
+    loading : true,
+    selected : 'Popular'
 };
 
 const configReducer =  (state = INITIAL_STATE, action) => {
