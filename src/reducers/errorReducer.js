@@ -1,6 +1,6 @@
 import * as TYPES from '../actions/types';
 
-const errorReducer = (state = [], action) => {
+const errorReducer =  (state = [], action) => {
   switch (action.type) {
     case TYPES.INSERT_ERROR:
       if (!action.payload) {
@@ -13,6 +13,5 @@ const errorReducer = (state = [], action) => {
       return state;
   }
 };
-
 
 export default errorReducer;
