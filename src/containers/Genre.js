@@ -1,12 +1,22 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
+import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { setSelectedMenu, getMoviesGenre } from '../actions';
+import MoviesList from '../components/MoviesList';
+
+const Wrapper = styled.div`
+    display : flex;
+    width : 100%;
+    flex-direction : column;
+`;
 
 const Genre = () => {
     const { name } = useParams();
     const dispatch = useDispatch();
     const movies = useSelector(state => state.movies);
+    const config = useSelector(state => state.config);
+    const { secure_base_url } = config.base.images;
 
     useEffect(() => {
         dispatch(setSelectedMenu(name))
@@ -17,11 +27,9 @@ const Genre = () => {
     if(movies.loading) return 'Loading...';
 
     return (
-        <div>
-            {movies.results.map((movie) => (
-                <p key={movie.id}> {movie.title} </p>
-            ))}
-        </div>
+        <Wrapper>
+            <MoviesList movies={movies} baseUrl={secure_base_url} />
+        </Wrapper>
     )
 }
 
