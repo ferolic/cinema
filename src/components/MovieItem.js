@@ -5,6 +5,7 @@ import LazyLoad from 'react-lazyload';
 
 import Rating from './Rating';
 import Loading from './Loading';
+import NothingSvg from '../svg/nothing.svg';
 
 const MovieWrapper = styled(Link)`
     display : flex;
@@ -147,6 +148,7 @@ const Tooltip = styled.span`
 
 const MovieItem = ({ movie, baseUrl}) => {
     const [loaded , setLoaded] = useState(false);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         return () => setLoaded(false);
@@ -161,9 +163,16 @@ const MovieItem = ({ movie, baseUrl}) => {
                     </ImgLoading>
                 ) : null } 
                 <MovieImg 
+                    error={error ? 1 : 0}
                     src={`${baseUrl}w342${movie.poster_path}`} 
                     onLoad={ () => setLoaded(true)}
                     style={!loaded ? { display: 'none' } : {}}
+                    onError={e => {
+                        setError(true);
+                        if(e.target.src !== `${NothingSvg}`){
+                            e.target.src = `${NothingSvg}`
+                        }
+                    }}
                 />
                 <DetailsWrapper>
                     <Title> {movie.title} </Title>

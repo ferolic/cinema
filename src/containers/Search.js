@@ -2,9 +2,10 @@ import React , { useEffect } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-
 import { getMoviesSearch, clearMovies } from '../actions';
 import MoviesList from '../components/MoviesList';
+import Loader from '../components/Loader';
+import NotFound from '../components/NotFound';
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,6 +25,20 @@ const Search = () => {
         dispatch(getMoviesSearch(query))
         return () => clearMovies();
     },[dispatch,query]);
+
+    if(movies.loading) {
+        return <Loader />;
+    } 
+    
+    // if there are no movies
+    else if (movies.total_results === 0) {
+        return (
+          <NotFound
+            title="Sorry!"
+            subtitle={`There were no results for ${query}...`}
+          />
+        );
+    }
 
     return (
         <Wrapper>

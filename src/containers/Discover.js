@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedMenu, getMoviesDiscover,clearMovies } from '../actions';
-
 import MoviesList from '../components/MoviesList';
+import Loader from '../components/Loader';
 
 const Wrapper = styled.div`
     display: flex;
@@ -26,7 +26,7 @@ const Discover = () => {
         dispatch(getMoviesDiscover(lowercasedName))
     },[dispatch, name, lowercasedName])
 
-    if(movies.loading) return 'loading...'
+    if(movies.loading) return <Loader />
     return (
         <Wrapper>
             <MoviesList movies={movies} baseUrl={secure_base_url} />

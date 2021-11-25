@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { setSelectedMenu, getMoviesGenre } from '../actions';
 import MoviesList from '../components/MoviesList';
+import Loader from '../components/Loader';
 
 const Wrapper = styled.div`
     display : flex;
@@ -24,7 +25,7 @@ const Genre = () => {
     },[dispatch, name]);
 
     // if loading
-    if(movies.loading) return 'Loading...';
+    if(movies.loading) return <Loader />;
 
     return (
         <Wrapper>
