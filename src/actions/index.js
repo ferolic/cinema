@@ -93,6 +93,27 @@ export const getMoviesDiscover = (name) => async (dispatch, getState) => {
   }
 };
 
+// Get Movies Search
+export const getMoviesSearch = (query) => async(dispatch) => {
+    try{
+      dispatch({ type : TYPES.FETCH_MOVIES_LOADING });
+      const res = await tmdbAPI.get('/search/movie', {
+        params : {
+          query,
+        }
+      });
+       
+      await dispatch({
+        type : TYPES.FETCH_MOVIES_SEARCH,
+        payload : res.data,
+      })
+
+      dispatch({ type : TYPES.FETCH_MOVIES_FINISHED})
+    } catch(err){
+      dispatch({ type: TYPES.INSERT_ERROR, payload: err.response });
+    }
+}
+
 
 export const clearMovies = () => {
     return {
