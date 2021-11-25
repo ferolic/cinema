@@ -1,4 +1,5 @@
 import React , { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -6,6 +7,7 @@ import { getMoviesSearch, clearMovies } from '../actions';
 import MoviesList from '../components/MoviesList';
 import Loader from '../components/Loader';
 import NotFound from '../components/NotFound';
+import { animateScroll as scroll } from 'react-scroll';
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,10 +23,16 @@ const Search = () => {
     const movies = useSelector(state => state.movies);
     const { secure_base_url } = config.base.images;
 
+    const search = useLocation().search;
+    const page = new URLSearchParams(search).get('page');
+
     useEffect(() => {
-        dispatch(getMoviesSearch(query))
+        dispatch(getMoviesSearch(query, page))
+        scroll.scrollToTop({
+          smooth: true,
+        });
         return () => clearMovies();
-    },[dispatch,query]);
+    },[dispatch,query, page]);
 
     if(movies.loading) {
         return <Loader />;

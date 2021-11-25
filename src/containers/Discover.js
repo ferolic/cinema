@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
+import { useLocation} from 'react-router-dom';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedMenu, getMoviesDiscover,clearMovies } from '../actions';
 import MoviesList from '../components/MoviesList';
 import Loader from '../components/Loader';
+import { animateScroll as scroll } from 'react-scroll';
 
 const Wrapper = styled.div`
     display: flex;
@@ -20,11 +22,17 @@ const Discover = () => {
     const config = useSelector(state => state.config);
     const { secure_base_url } = config.base.images;
     
+    const search = useLocation().search;
+    const page = new URLSearchParams(search).get('page');
+
     useEffect(() => {
         dispatch(setSelectedMenu(name));
+        scroll.scrollToTop({
+            smooth: true,
+        });
+        dispatch(getMoviesDiscover(lowercasedName, page))
         dispatch(clearMovies())
-        dispatch(getMoviesDiscover(lowercasedName))
-    },[dispatch, name, lowercasedName])
+    },[dispatch, name, lowercasedName, page])
 
     if(movies.loading) return <Loader />
     return (

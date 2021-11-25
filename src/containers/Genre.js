@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import { setSelectedMenu, getMoviesGenre } from '../actions';
+import { setSelectedMenu, getMoviesGenre, clearMovies } from '../actions';
 import MoviesList from '../components/MoviesList';
 import Loader from '../components/Loader';
+import { animateScroll as scroll } from 'react-scroll';
 
 const Wrapper = styled.div`
     display : flex;
@@ -13,16 +15,23 @@ const Wrapper = styled.div`
 `;
 
 const Genre = () => {
-    const { name } = useParams();
     const dispatch = useDispatch();
+    const { name  } = useParams();
     const movies = useSelector(state => state.movies);
     const config = useSelector(state => state.config);
     const { secure_base_url } = config.base.images;
+    
+    const search = useLocation().search;
+    const page = new URLSearchParams(search).get('page');
 
     useEffect(() => {
         dispatch(setSelectedMenu(name))
-        dispatch(getMoviesGenre(name))
-    },[dispatch, name]);
+        scroll.scrollToTop({
+            smooth: true,
+        });
+        dispatch(getMoviesGenre(name , page))
+        return () => clearMovies();
+    },[dispatch, name , page]);
 
     // if loading
     if(movies.loading) return <Loader />;
