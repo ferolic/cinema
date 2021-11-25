@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import LazyLoad from 'react-lazyload';
+
 import Rating from './Rating';
+import Loading from './Loading';
 
 const MovieWrapper = styled(Link)`
     display : flex;
@@ -58,6 +61,18 @@ const MovieImg = styled.img`
     }
 `;
 
+const ImgLoading = styled.div`
+    width : 100%;
+    display : flex;
+    align-items: center;
+    justify-content : center;
+    height : 100%;
+    min-height: 300px;
+    border-radius : 0.8rem;
+    box-shadow : 0rem 2rem 5rem var(--shadow-color);
+    transition: all 100ms cubic-bezier(0.645, 0.045, 0.355, 1);
+`;
+
 const DetailsWrapper = styled.div`
     display : flex;
     flex-direction : column;
@@ -96,17 +111,71 @@ const RatingsWrapper = styled.div`
     }
 `;
 
+const Tooltip = styled.span`
+    visibility: hidden;
+    opacity: 0;
+    width: 120px;
+    font-weight: 500;
+    font-size: 1.1rem;
+    background-color: var(--color-primary-light);
+    color: var(--text-color);
+    text-align: center;
+    border-radius: 6px;
+    padding: 1rem;
+    position: absolute;
+    z-index: 999;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -60px;
+    transition: all 200ms cubic-bezier(0.645, 0.045, 0.355, 1);
+    &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        transition: all 200ms cubic-bezier(0.645, 0.045, 0.355, 1);
+        border-color: var(--color-primary-light) transparent transparent transparent;
+    }
+    ${RatingsWrapper}:hover & {
+        visibility: visible;
+        opacity: 1;
+    }
+`;
+
 const MovieItem = ({ movie, baseUrl}) => {
+    const [loaded , setLoaded] = useState(false);
+
+    useEffect(() => {
+        return () => setLoaded(false);
+    },[])
+
     return (
-        <MovieWrapper to='/'>
-            <MovieImg src={`${baseUrl}w342${movie.poster_path}`} />
-            <DetailsWrapper>
-                <Title> {movie.title} </Title>
-                <RatingsWrapper>
-                    <Rating number={movie.vote_average / 2} />
-                </RatingsWrapper>
-            </DetailsWrapper>
-        </MovieWrapper>
+        <LazyLoad height={200} offset={200}>
+            <MovieWrapper to='/'>
+                {!loaded ? (
+                    <ImgLoading>
+                        <Loading />
+                    </ImgLoading>
+                ) : null } 
+                <MovieImg 
+                    src={`${baseUrl}w342${movie.poster_path}`} 
+                    onLoad={ () => setLoaded(true)}
+                    style={!loaded ? { display: 'none' } : {}}
+                />
+                <DetailsWrapper>
+                    <Title> {movie.title} </Title>
+                    <RatingsWrapper>
+                        <Rating number={movie.vote_average / 2} />
+                        <Tooltip>
+                            {movie.vote_average} average rating on {movie.vote_count} votes
+                        </Tooltip>
+                    </RatingsWrapper>
+                </DetailsWrapper>
+            </MovieWrapper>
+        </LazyLoad>
     )
 }
 
