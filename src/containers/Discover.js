@@ -15,13 +15,14 @@ const Wrapper = styled.div`
 `;
 
 const Discover = () => {
+    const dispatch = useDispatch();
+
     const { name } = useParams();
     const movies = useSelector(state => state.movies);
-    const dispatch = useDispatch();
     const lowercasedName = name.replace(/\s+/g, '_').toLowerCase()
     const config = useSelector(state => state.config);
-    const { secure_base_url } = config.base.images;
-    
+    const { secure_base_url } = config.loading ? '' : config.base.images;
+
     const search = useLocation().search;
     const page = new URLSearchParams(search).get('page');
 
@@ -35,9 +36,11 @@ const Discover = () => {
     },[dispatch, name, lowercasedName, page])
 
     if(movies.loading) return <Loader />
+    if(config.loading) return <Loader />
+    
     return (
         <Wrapper>
-            <MoviesList movies={movies} baseUrl={secure_base_url} />
+           {!config.loading &&  <MoviesList movies={movies} baseUrl={secure_base_url} />}
         </Wrapper>
     )
 }

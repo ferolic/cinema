@@ -156,7 +156,7 @@ const MovieItem = ({ movie, baseUrl}) => {
 
     return (
         <LazyLoad height={200} offset={200}>
-            <MovieWrapper to='/'>
+            <MovieWrapper to={`/movie/${movie.id}`}>
                 {!loaded ? (
                     <ImgLoading>
                         <Loading />

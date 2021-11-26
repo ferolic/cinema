@@ -19,7 +19,7 @@ const Genre = () => {
     const { name  } = useParams();
     const movies = useSelector(state => state.movies);
     const config = useSelector(state => state.config);
-    const { secure_base_url } = config.base.images;
+    const { secure_base_url } = config.loading ? '' : config.base.images;
     
     const search = useLocation().search;
     const page = new URLSearchParams(search).get('page');
@@ -35,6 +35,7 @@ const Genre = () => {
 
     // if loading
     if(movies.loading) return <Loader />;
+    if(config.loading) return <Loader />
 
     return (
         <Wrapper>

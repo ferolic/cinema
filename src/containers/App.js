@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes , Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { init } from '../actions';
 import Sidebar from './Sidebar';
 import Discover from './Discover';
 import Genre from './Genre';
-import Home from './Home';
 import Search from './Search';
+import Movie from './Movie';
 
 const Wrapper = styled.div`
     display : flex;
@@ -38,12 +38,15 @@ const ContentWrapper = styled.div`
     }
 `;
 
-const App = () => {
 
+const App = () => {
     const dispatch = useDispatch();
+
     useEffect(() => {
         dispatch(init())
     },[dispatch]);
+
+   
 
     return (
    
@@ -52,10 +55,11 @@ const App = () => {
             <Wrapper>
                 <ContentWrapper>
                 <Routes>
-                    <Route path='/' element={<Home />} />
+                    <Route path='/'  element= {<Navigate replace to="/discover/popular" />} />
                     <Route path='/discover/:name'element={<Discover />} />
                     <Route path='/genres/:name' element={ <Genre />} />
                     <Route path='/search/:query' element={<Search />} />
+                    <Route path='/movie/:id' element={<Movie />} />
                 </Routes>
                 </ContentWrapper>
             </Wrapper>
