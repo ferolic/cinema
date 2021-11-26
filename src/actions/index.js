@@ -146,3 +146,36 @@ export const getMovie = (id) => async(dispatch) => {
     console.log(err)
   }
 }
+
+// Get recommended movies based on another
+export const getRecommendations = (id, page) => async dispatch => {
+  try {
+    dispatch({ type: TYPES.FETCH_RECOMMENDATIONS_LOADING });
+    const res = await tmdbAPI.get(`/movie/${id}/recommendations`, {
+      params: {
+        page,
+      },
+    });
+    await dispatch({
+      type: TYPES.FETCH_RECOMMENDATIONS,
+      payload: res.data,
+    });
+    dispatch({ type: TYPES.FETCH_RECOMMENDATIONS_FINISHED });
+  } catch (err) {
+    dispatch({ type: TYPES.INSERT_ERROR, payload: err.response });
+  }
+};
+
+// clear Movie
+export const clearMovie = () => {
+  return {
+    type: TYPES.FETCH_MOVIE_LOADING,
+  };
+};
+
+// Set loading to true for next render
+export const clearRecommendations = () => {
+  return {
+    type: TYPES.FETCH_RECOMMENDATIONS_LOADING,
+  };
+};

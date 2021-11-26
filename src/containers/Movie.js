@@ -1,14 +1,14 @@
 import React, { useEffect , useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDotCircle , faLink, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { faImdb } from '@fortawesome/free-brands-svg-icons';
 import LazyLoad from 'react-lazyload';
-import { animateScroll as scroll } from 'react-scroll';
-import { getMovie } from '../actions';
+import { animateScroll as scroll , Element } from 'react-scroll';
+import { getMovie, getRecommendations, clearRecommendations, clearMovie } from '../actions';
 import { Helmet } from 'react-helmet';
 
 import Header from '../components/Header';
@@ -17,7 +17,8 @@ import  Loader from '../components/Loader';
 import Button from '../components/Button';
 import NothingSvg from '../svg/nothing.svg';
 import Loading from '../components/Loading';
-
+import NotFound from '../components/NotFound';
+import MoviesList from '../components/MoviesList';
 
 const Wrapper = styled.div`
     display: flex;
@@ -238,7 +239,11 @@ const Movie = () => {
     const { id } = useParams();
     const movie = useSelector(state => state.movie);
     const config = useSelector(state => state.config);
+    const recommended = useSelector(state => state.recommended);
     const { secure_base_url } = config.loading ? '' : config.base.images;
+
+    const search = useLocation().search;
+    const page = new URLSearchParams(search).get('page');
 
     useEffect(() => {
         scroll.scrollToTop({
@@ -246,7 +251,14 @@ const Movie = () => {
             delay: 500,
         });
         dispatch(getMovie(id));
-    },[dispatch, id ]);
+        dispatch(getRecommendations(id, page))
+
+        return () => {
+            clearMovie();
+            clearRecommendations();
+            setLoaded(false);
+        };
+    },[dispatch, id , page ]);
 
     //
     if (movie.loading) return  <Loader />;
@@ -311,7 +323,9 @@ const Movie = () => {
                 </ButtonsWrapper>
             </MovieDetails>
             </MovieWrapper>
-        </LazyLoad>
+          </LazyLoad>
+          <Header title='Recommended' subtitle='movies' />
+          {renderRecommended(recommended, secure_base_url)}
         </Wrapper>
     )
 }
@@ -392,6 +406,26 @@ const renderGenres = (genres) => {
           <Button title="trailer" icon={faPlay} />
         </AWrapper>
       );
+  }
+
+  // Render recommended movies
+function renderRecommended(recommended, base_url) {
+    if (recommended.loading) {
+      return <Loader />;
+    } else if (recommended.total_results === 0) {
+      return (
+        <NotFound
+          title="Sorry!"
+          subtitle={`There are no recommended movies...`}
+        />
+      );
+    } else {
+      return (
+        <Element name="scroll-to-element">
+          <MoviesList movies={recommended} baseUrl={base_url} />;
+        </Element>
+      );
+    }
   }
 
 export default Movie
