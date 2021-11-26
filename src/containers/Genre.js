@@ -7,6 +7,9 @@ import { setSelectedMenu, getMoviesGenre, clearMovies } from '../actions';
 import MoviesList from '../components/MoviesList';
 import Loader from '../components/Loader';
 import { animateScroll as scroll } from 'react-scroll';
+import Header from '../components/Header';
+import { Helmet } from 'react-helmet';
+
 
 const Wrapper = styled.div`
     display : flex;
@@ -39,7 +42,11 @@ const Genre = () => {
 
     return (
         <Wrapper>
-            <MoviesList movies={movies} baseUrl={secure_base_url} />
+            <Helmet> 
+                <title> {`${config.selected} Movies`} </title>
+            </Helmet>
+            {!config.loading && <Header title={config.selected} subtitle='movies' />}
+            {!config.loading &&  <MoviesList movies={movies} baseUrl={secure_base_url} />}
         </Wrapper>
     )
 }

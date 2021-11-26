@@ -8,6 +8,7 @@ import MoviesList from '../components/MoviesList';
 import Loader from '../components/Loader';
 import NotFound from '../components/NotFound';
 import { animateScroll as scroll } from 'react-scroll';
+import { Helmet } from 'react-helmet';
 
 const Wrapper = styled.div`
   display: flex;
@@ -50,6 +51,9 @@ const Search = () => {
 
     return (
         <Wrapper>
+           <Helmet>
+             <title> {`${query} - search results`} </title>
+           </Helmet>
            <MoviesList movies={movies} baseUrl={secure_base_url} />
         </Wrapper>
     )
