@@ -1,6 +1,6 @@
 import * as TYPES from '../actions/types';
 
-const movieReducer = (state = { loading: true }, action) => {
+const moviesReducer = (state = { loading: true }, action) => {
   switch (action.type) {
     case TYPES.FETCH_MOVIES_GENRE:
     case TYPES.FETCH_MOVIES_DISCOVER:
@@ -15,4 +15,4 @@ const movieReducer = (state = { loading: true }, action) => {
   }
 };
 
-export default movieReducer;
+export default moviesReducer;
